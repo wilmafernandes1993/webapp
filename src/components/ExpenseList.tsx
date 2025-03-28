@@ -1,4 +1,6 @@
   import {Expense} from "../model/Expense"; 
+import CurrencyUtils from "../Utils/CurrencyUtils";
+import DateUtils from "../Utils/DateUtils";
 
 interface Props {
     expenses: Expense[]
@@ -41,12 +43,12 @@ const ExpenseList = ({expenses}: Props) => {
             <div className="card-title m-0">
               <h5>{expense.name}</h5>
               <span className="fst-italic">
-                {expense.date.toString()}
+                {DateUtils.formatDateStrig(expense.date)}
               </span>
             </div>
             <div className="card-subtitle">
               <span className="badge rounded-pill app-primary-bg-color">
-                {expense.amount}
+                {CurrencyUtils.formatToINR(expense.amount)}
               </span>
             
             </div>
