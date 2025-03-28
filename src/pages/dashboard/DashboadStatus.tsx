@@ -1,5 +1,6 @@
 import CurrencyUtils from "../../Utils/CurrencyUtils"
 import DateUtils from "../../Utils/DateUtils"
+import { Link } from "react-router-dom";
 
 interface Props {
     loggedInUser: string;
@@ -22,6 +23,7 @@ const DashboadStatus = ({loggedInUser, totalExpenses}: Props) => {
         <div className="d-flex justify-content-between">
             <div>
                 Welcome, <b className="app-primary-color">{loggedInUser}</b>
+               
             </div>
             <div>{DateUtils.getFormattedDate(new Date())}</div>
         </div>
