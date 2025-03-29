@@ -25,7 +25,7 @@ useEffect(() => {
     
 }, []);
 
-    return {expense, errors, isLoading};
+    return {expense, errors, isLoading, setLoader, setErrors};
 
 }
 
