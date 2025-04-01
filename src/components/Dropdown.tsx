@@ -17,8 +17,8 @@ const Dropdown = ({options, id, name, value, onChange, onBlur, label, error, tou
         <label htmlFor={id} className="form-label">
             {label}
         </label>
-        <select name={name} id={id} className="form-control" onChange={onChange} onBlur={onBlur}>
-            <option value={value} label="Select Category"/>
+        <select name={name} id={id} className="form-control" onChange={onChange} onBlur={onBlur} value={value}>
+            <option value="" label="Select Category"/>
            {options.map((option) => (
             <option key={option} value={option} label={option}/>
            ))}
