@@ -3,9 +3,9 @@ import { Expense } from "../../model/Expense";
 import * as Yup from 'yup';
 import Dropdown from "../../components/Dropdown";
 import { expenseCategories } from "../../Utils/AppConstants";
-import { saveOrUpdateExpense } from "../../services/expense-service";
-import { useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { getExpenseByExpenseId, saveOrUpdateExpense } from "../../services/expense-service";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
 
 
 
@@ -15,22 +15,45 @@ const expenseValidationSchema = Yup.object({
 
 
 const NewExpense = () => {
+  const {expenseId} = useParams<{expenseId: string}>();
   const navigate = useNavigate();
   const [error, setErrors] = useState<string>("");
-  const formik = useFormik({
-    initialValues: {
-      name: '',
-      amount: 0,
-      note: '',
-      category: '',
-      date: new Date().toISOString().split('T')[0]
-    },
+  const [isLoading, setLoader] = useState<boolean>(false);
+  const [initialValues, setInitialValues] = useState<Expense>({
+    name: '',
+    amount: 0,
+    note: '',
+    category: '',
+    date: new Date().toISOString().split('T')[0]
+  })
 
+  useEffect(() => {
+    if(expenseId) {
+      //call the service method to get the existing response
+      setLoader(true);
+      getExpenseByExpenseId(expenseId)
+      .then(response => {
+        if(response && response.data) {
+          setInitialValues(response.data);
+        }
+      })
+      .catch(error => setErrors(error.message)
+    ).finally(() => setLoader(false));
+    
+    }
+  }, [expenseId]);
+
+  const formik = useFormik({
+    initialValues,
+    enableReinitialize: true,
     onSubmit: (values: Expense) => {
       saveOrUpdateExpense(values)
       .then(response => {
         if(response && response.status === 201) {
           navigate('/');
+        }
+        else if(response && response.status === 200) {
+          navigate(`/view/${expenseId}`);
         }
       })  
       .catch(error => {
@@ -47,6 +70,7 @@ const NewExpense = () => {
       
       <div className="container col-md-4 col-sm-8 col-xs-12">
       {error && <p className="text-danger fst-italic">{error}</p>}
+      {isLoading && <p>Loading...</p>}
         <form onSubmit={formik.handleSubmit}>
         <div className="mb-3">
           <label htmlFor="name" className="form-label">Name</label>
